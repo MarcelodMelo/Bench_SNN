@@ -27,7 +27,10 @@ def _load_and_cache_mnist():
     
     # Se não, processa e salva cache
     #print("⚠️  Processando MNIST (isso acontece só uma vez)...")
-    transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0,), (1,))])
+    transform = transforms.Compose([
+        transforms.ToTensor(), 
+        transforms.Normalize((0,), (1,))
+    ])
     
     mnist_train = datasets.MNIST(data_path, train=True, download=True, transform=transform)
     mnist_test = datasets.MNIST(data_path, train=False, download=True, transform=transform)
@@ -114,6 +117,7 @@ if __name__ == "__main__":
     print("=== TESTE MNIST ===")
     
     dataset = load_mnist()
+    print(dataset)
     print(f"   Train: {dataset['X_train'].shape} | Test: {dataset['X_test'].shape}")
     print(f"   Input: {dataset['input_shape']} | Classes: {dataset['num_classes']}")
     visualize_mnist_sample(dataset, 0)

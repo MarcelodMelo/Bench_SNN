@@ -130,7 +130,7 @@ def _find_max_timestep(images_flat, fir_filter, min_intensity, noise_std):
 def _create_temporal_signal(intensity, length, noise_std):
     """Cria sinal temporal a partir da intensidade"""
     intensity_val = intensity.item() if torch.is_tensor(intensity) else intensity
-    signal = np.ones(length) * intensity
+    signal = np.ones(length) * intensity_val
     signal += np.random.normal(0, noise_std, length)
     return np.clip(signal, 0, 1)
 

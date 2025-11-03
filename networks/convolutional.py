@@ -1,6 +1,6 @@
 import torch.nn as nn
 import snntorch as snn
-from base import BaseSNN
+from networks.base_network import BaseSNN
 
 # networks/convolutional.py  
 class ConvSNN(BaseSNN):
