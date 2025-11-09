@@ -6,7 +6,7 @@ from .base_network import BaseSNN
 class FeedForwardSNN(BaseSNN):
     """
     FeedForward SNN: 784i-20tBSA-256fc-LIF-10fc-LIF
-    Input(784) → BSA20t → Dense(256) → LIF(β=0.9) → Dense(10) → LIF(β=0.9)
+    Input(784) → Dense(256) → LIF(β=0.9) → Dense(10) → LIF(β=0.9)
     """
     
     def __init__(self, num_inputs=784, num_hidden=256, num_outputs=10, 
@@ -66,4 +66,4 @@ class FeedForwardSNN(BaseSNN):
         return torch.stack(spk2_rec), torch.stack(mem2_rec)
     
     def __repr__(self):
-        return f"FeedForwardSNN(784→{self.num_hidden}→{self.num_outputs}, timesteps={self.num_steps})"
+        return f"FeedForwardSNN({self.num_inputs}→{self.num_hidden}→{self.num_outputs}, timesteps={self.num_steps})"

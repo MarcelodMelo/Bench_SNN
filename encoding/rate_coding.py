@@ -4,14 +4,14 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.helpers import format_execution_time
-from datasets import load_mnist
+from datasets import *
 
 import torch
 from snntorch import spikegen
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-def convert_to_rate_coding(dataset_dict, num_steps=20, gain=1.0):
+def convert_to_rate_coding(data_dict, num_steps=20, gain=1.0):
     """
     Converte dataset para formato de spikes usando rate coding
     
@@ -32,29 +32,37 @@ def convert_to_rate_coding(dataset_dict, num_steps=20, gain=1.0):
     
     # Aplica rate coding aos dados de treino e teste
     X_train_spikes = spikegen.rate(
-        dataset_dict['X_train'].flatten(1),  # [n_amostras, 784]
+        data_dict['X_train'].flatten(1),  # [n_amostras, 784]
         num_steps=num_steps,
         gain=gain
     ).permute(1, 0, 2)  # [n_amostras, timesteps, neurônios]
     
     X_test_spikes = spikegen.rate(
-        dataset_dict['X_test'].flatten(1),   # [n_amostras, 784]
+        data_dict['X_test'].flatten(1),   # [n_amostras, 784]
         num_steps=num_steps,
         gain=gain
     ).permute(1, 0, 2)  # [n_amostras, timesteps, neurônios]
     
     # Retorna no formato padronizado de spikes
-    return {
+    data = {
         'X_train': X_train_spikes,
-        'y_train': dataset_dict['y_train'],
+        'y_train': data_dict['y_train'],
         'X_test': X_test_spikes,
-        'y_test': dataset_dict['y_test'],
-        'input_shape': (num_steps, X_train_spikes.shape[-1]),  # (timesteps, neurônios)
-        'num_classes': dataset_dict['num_classes'],
-        'timesteps': num_steps,
-        'encoding_config': encoding_config,
-        'dataset_name': f"{dataset_dict.get('dataset_name', 'dataset')}_rate_coding"
+        'y_test': data_dict['y_test'],
+        'input_shape': (num_steps, X_train_spikes.shape[-1]),
     }
+    return data
+    # return {
+    #     'X_train': X_train_spikes,
+    #     'y_train': data_dict['y_train'],
+    #     'X_test': X_test_spikes,
+    #     'y_test': data_dict['y_test'],
+    #     'input_shape': (num_steps, X_train_spikes.shape[-1]),  # (timesteps, neurônios)
+    #     'num_classes': dataset_dict['num_classes'],
+    #     'timesteps': num_steps,
+    #     'encoding_config': encoding_config,
+    #     'dataset_name': f"{dataset_dict.get('dataset_name', 'dataset')}_rate_coding"
+    # }
 
 def create_spike_gif(spikes_dataset, original_dataset, sample_idx=0, gif_path='spikes_evolution.gif'):
     """
@@ -108,16 +116,17 @@ if __name__ == "__main__":
     start_time = time.time()
     print("=== TESTE RATE CODING ===")
 
-    dataset = load_mnist()
-    spikes_dataset = convert_to_rate_coding(dataset, num_steps=20, gain=1.0)
+    dataset = MNISTDataset()
+    data = dataset.get_data()
+    spikes_dataset = convert_to_rate_coding(data, num_steps=20, gain=1.0)
 
-    print(f"Original: {dataset['X_train'].shape}")      # [60000, 1, 28, 28]
+    print(f"Original: {data['X_train'].shape}")      # [60000, 1, 28, 28]
     print(f"Spikes: {spikes_dataset['X_train'].shape}") # [60000, 20, 784]
     print(f"Novo input_shape: {spikes_dataset['input_shape']}")  # (20, 784)
 
     # Gera GIF da primeira amostra
-    gif_path = create_spike_gif(spikes_dataset, dataset, sample_idx=0)
-
+    #gif_path = create_spike_gif(spikes_dataset, data, sample_idx=0)
+    print(spikes_dataset['X_train'][0])
     execution_time = time.time() - start_time
     print(f"Execução concluída em {format_execution_time(execution_time)}")
     print("=== TESTE FINALIZADO ===")

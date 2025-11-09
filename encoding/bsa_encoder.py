@@ -188,7 +188,7 @@ def test_bsa_encoder():
     start_time = time.time()
     
     # Carrega dados
-    from datasets.mnist_dataset import load_mnist
+    from datasets.mnist import load_mnist
     dataset = load_mnist()
     
     print(f"📥 Input: {dataset['X_train'].shape}")

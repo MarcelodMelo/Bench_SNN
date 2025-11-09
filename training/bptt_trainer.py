@@ -32,7 +32,7 @@ class BPTTTrainer(BaseTrainer):
             total_loss += loss_val.item()
             total_acc += acc_val
             
-            if batch_idx % 50 == 0:
+            if batch_idx % 10 == 0:
                 print(f"  Batch {batch_idx}/{num_batches}, Loss: {loss_val.item():.4f}, Acc: {acc_val*100:.2f}%")
                 
         return total_loss / num_batches, total_acc / num_batches

@@ -11,6 +11,8 @@ Formato padrão de retorno: dict com:
 - 'channels': list (para EEG)
 """
 
-from .mnist_dataset import load_mnist, visualize_mnist_sample
+from .mnist import MNISTDataset
+from .bciciv2a import bciciv2A
+from .bciciv2b import bciciv2B
 
-__all__ = ['load_mnist', 'visualize_mnist_sample']
+__all__ = ['MNISTDataset', 'bciciv2A', 'bciciv2B']
